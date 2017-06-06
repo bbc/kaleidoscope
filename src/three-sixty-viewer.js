@@ -16,8 +16,10 @@ export default class ThreeSixtyViewer {
         verticalPanning,
         onDragStart,
         onDragStop,
+        el
     } = this;
-    this.renderer = new Renderer({height, width});
+    this.renderer = new Renderer({el, height, width});
+    this.el = this.renderer.el;
     this.camera = new THREE.PerspectiveCamera(80, this.width / this.height, 0.1, 100);
     this.controls = new Controls({
         camera: this.camera,
@@ -40,7 +42,7 @@ export default class ThreeSixtyViewer {
     this.texture = this.createTexture();
     this.renderer.setTexture(this.texture);
     this.scene.getObjectByName('photo').children = [this.renderer.mesh];
-    this.target = this.container ? this.container : document.querySelector(this.containerId);
+    this.target = this.container ? this.container : (this.containerId ? document.querySelector(this.containerId) : null);
   }
 
   play() {
@@ -129,8 +131,12 @@ export default class ThreeSixtyViewer {
   }
 
   render() {
-    this.target.appendChild(this.renderer.el);
-    this.element.style.display = 'none';
+
+    if(this.target) {
+        this.target.appendChild(this.renderer.el);
+    }
+
+    //this.element.style.display = 'none';
 
     let loop = () => {
       this.animationFrameId = requestAnimationFrame(loop);

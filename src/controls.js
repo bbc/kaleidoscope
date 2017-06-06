@@ -33,13 +33,13 @@ export default class Controls {
   }
 
   bindEvents() {
-    this.el.addEventListener('mouseleave', this.onMouseUp);
-    this.el.addEventListener('mousemove', this.onMouseMove);
+    //this.el.addEventListener('mouseleave', this.onMouseUp);
+    document.addEventListener('mousemove', this.onMouseMove);
     this.el.addEventListener('mousedown', this.onMouseDown);
-    this.el.addEventListener('mouseup', this.onMouseUp);
+    document.addEventListener('mouseup', this.onMouseUp);
     this.el.addEventListener('touchstart', this.onTouchStart);
-    this.el.addEventListener('touchmove', this.onTouchMove);
-    this.el.addEventListener('touchend', this.onTouchEnd);
+    document.addEventListener('touchmove', this.onTouchMove);
+    document.addEventListener('touchend', this.onTouchEnd);
     if (!this.isInIframe())
       window.addEventListener('devicemotion', this.onDeviceMotion);
     window.addEventListener('message', this.onMessage);
@@ -76,13 +76,13 @@ export default class Controls {
   }
 
   destroy() {
-    this.el.removeEventListener('mouseleave', this.onMouseUp);
-    this.el.removeEventListener('mousemove', this.onMouseMove);
+    //this.el.removeEventListener('mouseleave', this.onMouseUp);
+    document.removeEventListener('mousemove', this.onMouseMove);
     this.el.removeEventListener('mousedown', this.onMouseDown);
-    this.el.removeEventListener('mouseup', this.onMouseUp);
+    document.removeEventListener('mouseup', this.onMouseUp);
     this.el.removeEventListener('touchstart', this.onTouchStart);
-    this.el.removeEventListener('touchmove', this.onTouchMove);
-    this.el.removeEventListener('touchend', this.onTouchEnd);
+    document.removeEventListener('touchmove', this.onTouchMove);
+    document.removeEventListener('touchend', this.onTouchEnd);
     window.removeEventListener('devicemotion', this.onDeviceMotion);
     window.removeEventListener('message', this.onMessage);
   }
@@ -92,11 +92,11 @@ export default class Controls {
   }
 
   addDraggingStyle() {
-    this.el.setAttribute('style', `${this.getCurrentStyle()} cursor: -webkit-grabbing; cursor: -moz-grabbing; cursor: grabbing;`);
+    //this.el.setAttribute('style', `${this.getCurrentStyle()} cursor: -webkit-grabbing; cursor: -moz-grabbing; cursor: grabbing;`);
   }
 
   addDraggableStyle() {
-    this.el.setAttribute('style', `${this.getCurrentStyle()} cursor: -webkit-grab; cursor: -moz-grab; cursor: grab;`);
+    //this.el.setAttribute('style', `${this.getCurrentStyle()} cursor: -webkit-grab; cursor: -moz-grab; cursor: grab;`);
   }
 
   onMessage(event) {

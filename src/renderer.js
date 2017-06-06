@@ -3,7 +3,11 @@ import THREE from 'threejs360';
 export default class Renderer {
   constructor(options) {
     Object.assign(this, options);
-    this.renderer = new THREE.WebGLRenderer();
+
+    let rendererProperties = this.el ? {canvas: this.el} : {};
+
+    this.renderer = new THREE.WebGLRenderer(rendererProperties);
+
     this.renderer.setClearColor(0x000000, 0);
     this.renderer.setSize(this.width, this.height);
     this.renderer.setPixelRatio(window.devicePixelRatio);

@@ -13,7 +13,9 @@
     "LICENSE",
     "README.md",
     "dist/kaleidoscope.es.js",
+    "dist/kaleidoscope.iife.js",
     "dist/kaleidoscope.iife.min.js",
+    "dist/kaleidoscope.js",
     "dist/kaleidoscope.min.js",
     "src",
     "test"

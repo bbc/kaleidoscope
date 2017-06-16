@@ -125,12 +125,15 @@ export default class ThreeSixtyViewer {
     let videoLoop = () => {
       this.needsUpdate = true;
       this.videoLoopId = setTimeout(videoLoop, videoFps);
+      console.log('Video Loop');
     }
 
     videoLoop();
   }
 
   render() {
+
+    cancelAnimationFrame(this.animationFrameId);
 
     if(this.target) {
         this.target.appendChild(this.renderer.el);
@@ -143,10 +146,20 @@ export default class ThreeSixtyViewer {
       let cameraUpdated = this.controls.update();
       this.renderer.render(this.scene, this.camera, this.needsUpdate || cameraUpdated);
       this.needsUpdate = false;
+      console.log('Render Loop');
     };
 
     this.startVideoLoop();
     loop();
   }
+
+  stopRender() {
+
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+      this.stopVideoLoop();
+
+  }
+
 }
 

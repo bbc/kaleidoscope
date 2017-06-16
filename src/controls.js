@@ -29,7 +29,7 @@ export default class Controls {
     this.onTouchEnd = _ => this.onMouseUp();
     this.onDeviceMotion = this.onDeviceMotion.bind(this);
     this.onMessage = this.onMessage.bind(this);
-    this.bindEvents();
+    //this.bindEvents();
   }
 
   bindEvents() {
@@ -40,9 +40,9 @@ export default class Controls {
     this.el.addEventListener('touchstart', this.onTouchStart);
     document.addEventListener('touchmove', this.onTouchMove);
     document.addEventListener('touchend', this.onTouchEnd);
-    if (!this.isInIframe())
-      window.addEventListener('devicemotion', this.onDeviceMotion);
-    window.addEventListener('message', this.onMessage);
+    //if (!this.isInIframe())
+    //  window.addEventListener('devicemotion', this.onDeviceMotion);
+    //window.addEventListener('message', this.onMessage);
   }
 
   centralize() {
@@ -83,8 +83,8 @@ export default class Controls {
     this.el.removeEventListener('touchstart', this.onTouchStart);
     document.removeEventListener('touchmove', this.onTouchMove);
     document.removeEventListener('touchend', this.onTouchEnd);
-    window.removeEventListener('devicemotion', this.onDeviceMotion);
-    window.removeEventListener('message', this.onMessage);
+    //window.removeEventListener('devicemotion', this.onDeviceMotion);
+    //window.removeEventListener('message', this.onMessage);
   }
 
   getCurrentStyle() {

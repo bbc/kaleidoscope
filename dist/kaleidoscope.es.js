@@ -19938,7 +19938,7 @@ var Controls = function () {
     };
     this.onDeviceMotion = this.onDeviceMotion.bind(this);
     this.onMessage = this.onMessage.bind(this);
-    this.bindEvents();
+    //this.bindEvents();
   }
 
   createClass(Controls, [{
@@ -19951,8 +19951,9 @@ var Controls = function () {
       this.el.addEventListener('touchstart', this.onTouchStart);
       document.addEventListener('touchmove', this.onTouchMove);
       document.addEventListener('touchend', this.onTouchEnd);
-      if (!this.isInIframe()) window.addEventListener('devicemotion', this.onDeviceMotion);
-      window.addEventListener('message', this.onMessage);
+      //if (!this.isInIframe())
+      //  window.addEventListener('devicemotion', this.onDeviceMotion);
+      //window.addEventListener('message', this.onMessage);
     }
   }, {
     key: 'centralize',
@@ -19998,8 +19999,8 @@ var Controls = function () {
       this.el.removeEventListener('touchstart', this.onTouchStart);
       document.removeEventListener('touchmove', this.onTouchMove);
       document.removeEventListener('touchend', this.onTouchEnd);
-      window.removeEventListener('devicemotion', this.onDeviceMotion);
-      window.removeEventListener('message', this.onMessage);
+      //window.removeEventListener('devicemotion', this.onDeviceMotion);
+      //window.removeEventListener('message', this.onMessage);
     }
   }, {
     key: 'getCurrentStyle',
@@ -20263,6 +20264,8 @@ var ThreeSixtyViewer = function () {
     value: function render() {
       var _this2 = this;
 
+      cancelAnimationFrame(this.animationFrameId);
+
       if (this.target) {
         this.target.appendChild(this.renderer.el);
       }
@@ -20278,6 +20281,14 @@ var ThreeSixtyViewer = function () {
 
       this.startVideoLoop();
       loop();
+    }
+  }, {
+    key: 'stopRender',
+    value: function stopRender() {
+
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+      this.stopVideoLoop();
     }
   }]);
   return ThreeSixtyViewer;

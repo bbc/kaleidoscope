@@ -20155,9 +20155,9 @@
 	    this.scene = this.createScene();
 	    this.scene.add(this.camera);
 	    this.element = this.getElement();
-	    this.element.addEventListener('playing', this.startVideoLoop);
-	    this.element.addEventListener('pause', this.stopVideoLoop);
-	    this.element.addEventListener('ended', this.stopVideoLoop);
+	    //this.element.addEventListener('playing', this.startVideoLoop);
+	    //this.element.addEventListener('pause', this.stopVideoLoop);
+	    //this.element.addEventListener('ended', this.stopVideoLoop);
 	    this.texture = this.createTexture();
 	    this.renderer.setTexture(this.texture);
 	    this.scene.getObjectByName('photo').children = [this.renderer.mesh];

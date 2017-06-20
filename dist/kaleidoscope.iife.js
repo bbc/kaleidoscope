@@ -422,6 +422,8 @@
 			},
 
 			random16: function random16() {
+
+				console.warn('THREE.Math.random16() has been deprecated. Use Math.random() instead.');
 				return Math.random();
 			},
 
@@ -598,7 +600,10 @@
 
 					if (string === undefined) return;
 
-					if (parseFloat(string) < 1) {}
+					if (parseFloat(string) < 1) {
+
+						console.warn('THREE.Color: Alpha component of ' + style + ' will be ignored.');
+					}
 				}
 
 				var m;
@@ -698,7 +703,7 @@
 					} else {
 
 						// unknown color
-
+						console.warn('THREE.Color: Unknown color ' + style);
 					}
 				}
 
@@ -1062,6 +1067,8 @@
 			add: function add(v, w) {
 
 				if (w !== undefined) {
+
+					console.warn('THREE.Vector2: .add() now only accepts one argument. Use .addVectors( a, b ) instead.');
 					return this.addVectors(v, w);
 				}
 
@@ -1098,6 +1105,8 @@
 			sub: function sub(v, w) {
 
 				if (w !== undefined) {
+
+					console.warn('THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.');
 					return this.subVectors(v, w);
 				}
 
@@ -1485,6 +1494,8 @@
 			add: function add(v, w) {
 
 				if (w !== undefined) {
+
+					console.warn('THREE.Vector3: .add() now only accepts one argument. Use .addVectors( a, b ) instead.');
 					return this.addVectors(v, w);
 				}
 
@@ -1525,6 +1536,8 @@
 			sub: function sub(v, w) {
 
 				if (w !== undefined) {
+
+					console.warn('THREE.Vector3: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.');
 					return this.subVectors(v, w);
 				}
 
@@ -1556,6 +1569,8 @@
 			multiply: function multiply(v, w) {
 
 				if (w !== undefined) {
+
+					console.warn('THREE.Vector3: .multiply() now only accepts one argument. Use .multiplyVectors( a, b ) instead.');
 					return this.multiplyVectors(v, w);
 				}
 
@@ -1598,7 +1613,10 @@
 
 				return function applyEuler(euler) {
 
-					if (euler instanceof THREE.Euler === false) {}
+					if (euler instanceof THREE.Euler === false) {
+
+						console.error('THREE.Vector3: .applyEuler() now expects an Euler rotation rather than a Vector3 and order.');
+					}
 
 					if (quaternion === undefined) quaternion = new THREE.Quaternion();
 
@@ -1910,6 +1928,8 @@
 			cross: function cross(v, w) {
 
 				if (w !== undefined) {
+
+					console.warn('THREE.Vector3: .cross() now only accepts one argument. Use .crossVectors( a, b ) instead.');
 					return this.crossVectors(v, w);
 				}
 
@@ -2040,6 +2060,8 @@
 			setFromMatrixColumn: function setFromMatrixColumn(m, index) {
 
 				if (typeof m === 'number') {
+
+					console.warn('THREE.Vector3: setFromMatrixColumn now expects ( matrix, index ).');
 
 					m = arguments[1];
 					index = arguments[0];
@@ -2215,6 +2237,8 @@
 			add: function add(v, w) {
 
 				if (w !== undefined) {
+
+					console.warn('THREE.Vector4: .add() now only accepts one argument. Use .addVectors( a, b ) instead.');
 					return this.addVectors(v, w);
 				}
 
@@ -2259,6 +2283,8 @@
 			sub: function sub(v, w) {
 
 				if (w !== undefined) {
+
+					console.warn('THREE.Vector4: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.');
 					return this.subVectors(v, w);
 				}
 
@@ -2685,7 +2711,10 @@
 
 			this.elements = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
 
-			if (arguments.length > 0) {}
+			if (arguments.length > 0) {
+
+				console.error('THREE.Matrix3: the constructor no longer reads arguments. use .set() instead.');
+			}
 		};
 
 		THREE.Matrix3.prototype = {
@@ -2809,7 +2838,10 @@
 
 			getInverse: function getInverse(matrix, throwOnDegenerate) {
 
-				if (matrix instanceof THREE.Matrix4) {}
+				if (matrix instanceof THREE.Matrix4) {
+
+					console.warn("THREE.Matrix3.getInverse no longer takes a Matrix4 argument.");
+				}
 
 				var me = matrix.elements,
 				    te = this.elements,
@@ -2831,7 +2863,10 @@
 
 					var msg = "THREE.Matrix3.getInverse(): can't invert matrix, determinant is 0";
 
-					if (throwOnDegenerate || false) {} else {}
+					if (throwOnDegenerate || false) {} else {
+
+						console.warn(msg);
+					}
 
 					return this.identity();
 				}
@@ -2939,7 +2974,10 @@
 
 			this.elements = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
 
-			if (arguments.length > 0) {}
+			if (arguments.length > 0) {
+
+				console.error('THREE.Matrix4: the constructor no longer reads arguments. use .set() instead.');
+			}
 		};
 
 		THREE.Matrix4.prototype = {
@@ -3038,7 +3076,10 @@
 
 			makeRotationFromEuler: function makeRotationFromEuler(euler) {
 
-				if (euler instanceof THREE.Euler === false) {}
+				if (euler instanceof THREE.Euler === false) {
+
+					console.error('THREE.Matrix: .makeRotationFromEuler() now expects a Euler rotation rather than a Vector3 and order.');
+				}
 
 				var te = this.elements;
 
@@ -3263,6 +3304,8 @@
 			multiply: function multiply(m, n) {
 
 				if (n !== undefined) {
+
+					console.warn('THREE.Matrix4: .multiply() now only accepts one argument. Use .multiplyMatrices( a, b ) instead.');
 					return this.multiplyMatrices(m, n);
 				}
 
@@ -3481,6 +3524,7 @@
 				return function () {
 
 					if (v1 === undefined) v1 = new THREE.Vector3();
+					console.warn('THREE.Matrix4: .getPosition() has been removed. Use Vector3.setFromMatrixPosition( matrix ) instead.');
 
 					return v1.setFromMatrixColumn(this, 3);
 				};
@@ -3529,7 +3573,10 @@
 
 					var msg = "THREE.Matrix4.getInverse(): can't invert matrix, determinant is 0";
 
-					if (throwOnDegenerate || false) {} else {}
+					if (throwOnDegenerate || false) {} else {
+
+						console.warn(msg);
+					}
 
 					return this.identity();
 				}
@@ -4334,6 +4381,8 @@
 			multiply: function multiply(q, p) {
 
 				if (p !== undefined) {
+
+					console.warn('THREE.Quaternion: .multiply() now only accepts one argument. Use .multiplyQuaternions( a, b ) instead.');
 					return this.multiplyQuaternions(q, p);
 				}
 
@@ -5273,7 +5322,10 @@
 						this._x = Math.atan2(-m23, m33);
 						this._y = 0;
 					}
-				} else {}
+				} else {
+
+					console.warn('THREE.Euler: .setFromRotationMatrix() given unsupported order: ' + order);
+				}
 
 				this._order = order;
 
@@ -6565,6 +6617,8 @@
 				}
 
 				if (object === this) {
+
+					console.error("THREE.Object3D.add: object can't be added as a child of itself.", object);
 					return this;
 				}
 
@@ -6579,7 +6633,10 @@
 					object.dispatchEvent({ type: 'added' });
 
 					this.children.push(object);
-				} else {}
+				} else {
+
+					console.error("THREE.Object3D.add: object not an instance of THREE.Object3D.", object);
+				}
 
 				return this;
 			},
@@ -7077,6 +7134,8 @@
 					var color = colors[i];
 
 					if (color === undefined) {
+
+						console.warn('THREE.BufferAttribute.copyColorsArray(): color is undefined', i);
 						color = new THREE.Color();
 					}
 
@@ -7115,6 +7174,8 @@
 					var vector = vectors[i];
 
 					if (vector === undefined) {
+
+						console.warn('THREE.BufferAttribute.copyVector2sArray(): vector is undefined', i);
 						vector = new THREE.Vector2();
 					}
 
@@ -7135,6 +7196,8 @@
 					var vector = vectors[i];
 
 					if (vector === undefined) {
+
+						console.warn('THREE.BufferAttribute.copyVector3sArray(): vector is undefined', i);
 						vector = new THREE.Vector3();
 					}
 
@@ -7156,6 +7219,8 @@
 					var vector = vectors[i];
 
 					if (vector === undefined) {
+
+						console.warn('THREE.BufferAttribute.copyVector4sArray(): vector is undefined', i);
 						vector = new THREE.Vector4();
 					}
 
@@ -7315,6 +7380,8 @@
 		// Deprecated
 
 		THREE.DynamicBufferAttribute = function (array, itemSize) {
+
+			console.warn('THREE.DynamicBufferAttribute has been removed. Use new THREE.BufferAttribute().setDynamic( true ) instead.');
 			return new THREE.BufferAttribute(array, itemSize).setDynamic(true);
 		};
 
@@ -7390,12 +7457,16 @@
 
 				if (attribute instanceof THREE.BufferAttribute === false && attribute instanceof THREE.InterleavedBufferAttribute === false) {
 
+					console.warn('THREE.BufferGeometry: .addAttribute() now expects ( name, attribute ).');
+
 					this.addAttribute(name, new THREE.BufferAttribute(arguments[1], arguments[2]));
 
 					return;
 				}
 
 				if (name === 'index') {
+
+					console.warn('THREE.BufferGeometry.addAttribute: Use .setIndex() for index attribute.');
 					this.setIndex(attribute);
 
 					return;
@@ -7854,7 +7925,10 @@
 						this.boundingBox.max.set(0, 0, 0);
 					}
 
-					if (isNaN(this.boundingBox.min.x) || isNaN(this.boundingBox.min.y) || isNaN(this.boundingBox.min.z)) {}
+					if (isNaN(this.boundingBox.min.x) || isNaN(this.boundingBox.min.y) || isNaN(this.boundingBox.min.z)) {
+
+						console.error('THREE.BufferGeometry.computeBoundingBox: Computed min/max have NaN values. The "position" attribute is likely to have NaN values.', this);
+					}
 				};
 			}(),
 
@@ -7892,7 +7966,10 @@
 
 						this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
 
-						if (isNaN(this.boundingSphere.radius)) {}
+						if (isNaN(this.boundingSphere.radius)) {
+
+							console.error('THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.', this);
+						}
 					}
 				};
 			}(),
@@ -8021,6 +8098,8 @@
 			merge: function merge(geometry, offset) {
 
 				if (geometry instanceof THREE.BufferGeometry === false) {
+
+					console.error('THREE.BufferGeometry.merge(): geometry not an instance of THREE.BufferGeometry.', geometry);
 					return;
 				}
 
@@ -8072,6 +8151,8 @@
 			toNonIndexed: function toNonIndexed() {
 
 				if (this.index === null) {
+
+					console.warn('THREE.BufferGeometry.toNonIndexed(): Geometry is already non-indexed.');
 					return this;
 				}
 
@@ -8264,6 +8345,8 @@
 			constructor: THREE.InterleavedBufferAttribute,
 
 			get length() {
+
+				console.warn('THREE.BufferAttribute: .length has been deprecated. Please use .count.');
 				return this.array.length;
 			},
 
@@ -8955,7 +9038,10 @@
 				}
 			},
 
-			computeTangents: function computeTangents() {},
+			computeTangents: function computeTangents() {
+
+				console.warn('THREE.Geometry: .computeTangents() has been removed.');
+			},
 
 			computeLineDistances: function computeLineDistances() {
 
@@ -8996,6 +9082,8 @@
 			merge: function merge(geometry, matrix, materialIndexOffset) {
 
 				if (geometry instanceof THREE.Geometry === false) {
+
+					console.error('THREE.Geometry.merge(): geometry not an instance of THREE.Geometry.', geometry);
 					return;
 				}
 
@@ -9096,6 +9184,8 @@
 			mergeMesh: function mergeMesh(mesh) {
 
 				if (mesh instanceof THREE.Mesh === false) {
+
+					console.error('THREE.Geometry.mergeMesh(): mesh not an instance of THREE.Mesh.', mesh);
 					return;
 				}
 
@@ -9523,9 +9613,15 @@
 			computeBoundingBox: THREE.Geometry.prototype.computeBoundingBox,
 			computeBoundingSphere: THREE.Geometry.prototype.computeBoundingSphere,
 
-			computeFaceNormals: function computeFaceNormals() {},
+			computeFaceNormals: function computeFaceNormals() {
 
-			computeVertexNormals: function computeVertexNormals() {},
+				console.warn('THREE.DirectGeometry: computeFaceNormals() is not a method of this type of geometry.');
+			},
+
+			computeVertexNormals: function computeVertexNormals() {
+
+				console.warn('THREE.DirectGeometry: computeVertexNormals() is not a method of this type of geometry.');
+			},
 
 			computeGroups: function computeGroups(geometry) {
 
@@ -9661,6 +9757,8 @@
 							this.uvs.push(vertexUvs[0], vertexUvs[1], vertexUvs[2]);
 						} else {
 
+							console.warn('THREE.DirectGeometry.fromGeometry(): Undefined vertexUv ', i);
+
 							this.uvs.push(new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2());
 						}
 					}
@@ -9673,6 +9771,8 @@
 
 							this.uvs2.push(vertexUvs[0], vertexUvs[1], vertexUvs[2]);
 						} else {
+
+							console.warn('THREE.DirectGeometry.fromGeometry(): Undefined vertexUv2 ', i);
 
 							this.uvs2.push(new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2());
 						}
@@ -10258,12 +10358,16 @@
 					var newValue = values[key];
 
 					if (newValue === undefined) {
+
+						console.warn("THREE.Material: '" + key + "' parameter is undefined.");
 						continue;
 					}
 
 					var currentValue = this[key];
 
 					if (currentValue === undefined) {
+
+						console.warn("THREE." + this.type + ": '" + key + "' is not a property of this material.");
 						continue;
 					}
 
@@ -10814,7 +10918,10 @@
 
 			if (parameters !== undefined) {
 
-				if (parameters.attributes !== undefined) {}
+				if (parameters.attributes !== undefined) {
+
+					console.error('THREE.ShaderMaterial: attributes should now be defined in THREE.BufferGeometry instead.');
+				}
 
 				this.setValues(parameters);
 			}
@@ -12115,6 +12222,8 @@
 		THREE.Line = function (geometry, material, mode) {
 
 			if (mode === 1) {
+
+				console.warn('THREE.Line: parameter THREE.LinePieces no longer supported. Created THREE.LineSegments instead.');
 				return new THREE.LineSegments(geometry, material);
 			}
 
@@ -12348,6 +12457,8 @@
 
 				return this.morphTargetDictionary[name];
 			}
+
+			console.warn('THREE.Mesh.getMorphTargetIndexByName: morph target ' + name + ' does not exist. Returning 0.');
 
 			return 0;
 		};
@@ -12745,7 +12856,10 @@
 			} else if (this.bindMode === "detached") {
 
 				this.bindMatrixInverse.getInverse(this.bindMatrix);
-			} else {}
+			} else {
+
+				console.warn('THREE.SkinnedMesh unrecognized bindMode: ' + this.bindMode);
+			}
 		};
 
 		THREE.SkinnedMesh.prototype.clone = function () {
@@ -13525,6 +13639,8 @@
 
 		THREE.WebGLRenderer = function (parameters) {
 
+			console.log('THREE.WebGLRenderer', THREE.REVISION);
+
 			parameters = parameters || {};
 
 			var _canvas = parameters.canvas !== undefined ? parameters.canvas : document.createElement('canvas'),
@@ -13723,7 +13839,10 @@
 				}
 
 				_canvas.addEventListener('webglcontextlost', onContextLost, false);
-			} catch (error) {}
+			} catch (error) {
+
+				console.error('THREE.WebGLRenderer: ' + error);
+			}
 
 			var extensions = new THREE.WebGLExtensions(_gl);
 
@@ -14362,6 +14481,8 @@
 					extension = extensions.get('ANGLE_instanced_arrays');
 
 					if (extension === null) {
+
+						console.error('THREE.WebGLRenderer.setupVertexAttributes: using THREE.InstancedBufferGeometry but hardware does not support extension ANGLE_instanced_arrays.');
 						return;
 					}
 				}
@@ -14503,6 +14624,8 @@
 			this.render = function (scene, camera, renderTarget, forceClear) {
 
 				if (camera instanceof THREE.Camera === false) {
+
+					console.error('THREE.WebGLRenderer.render: camera is not an instance of THREE.Camera.');
 					return;
 				}
 
@@ -15436,7 +15559,10 @@
 
 				var textureUnit = _usedTextureUnits;
 
-				if (textureUnit >= capabilities.maxTextures) {}
+				if (textureUnit >= capabilities.maxTextures) {
+
+					console.warn('WebGLRenderer: trying to use ' + textureUnit + ' texture units while this GPU supports only ' + capabilities.maxTextures);
+				}
 
 				_usedTextureUnits += 1;
 
@@ -15720,7 +15846,10 @@
 							_this.setTexture(texture, textureUnit);
 						}
 					}
-				} else {}
+				} else {
+
+					console.warn('THREE.WebGLRenderer: Unknown uniform type: ' + type);
+				}
 			}
 
 			function loadUniformsGeneric(uniforms) {
@@ -15944,12 +16073,18 @@
 					_gl.texParameteri(textureType, _gl.TEXTURE_WRAP_S, _gl.CLAMP_TO_EDGE);
 					_gl.texParameteri(textureType, _gl.TEXTURE_WRAP_T, _gl.CLAMP_TO_EDGE);
 
-					if (texture.wrapS !== THREE.ClampToEdgeWrapping || texture.wrapT !== THREE.ClampToEdgeWrapping) {}
+					if (texture.wrapS !== THREE.ClampToEdgeWrapping || texture.wrapT !== THREE.ClampToEdgeWrapping) {
+
+						console.warn('THREE.WebGLRenderer: Texture is not power of two. Texture.wrapS and Texture.wrapT should be set to THREE.ClampToEdgeWrapping.', texture);
+					}
 
 					_gl.texParameteri(textureType, _gl.TEXTURE_MAG_FILTER, filterFallback(texture.magFilter));
 					_gl.texParameteri(textureType, _gl.TEXTURE_MIN_FILTER, filterFallback(texture.minFilter));
 
-					if (texture.minFilter !== THREE.NearestFilter && texture.minFilter !== THREE.LinearFilter) {}
+					if (texture.minFilter !== THREE.NearestFilter && texture.minFilter !== THREE.LinearFilter) {
+
+						console.warn('THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter should be set to THREE.NearestFilter or THREE.LinearFilter.', texture);
+					}
 				}
 
 				extension = extensions.get('EXT_texture_filter_anisotropic');
@@ -16033,7 +16168,10 @@
 							if (state.getCompressedTextureFormats().indexOf(glFormat) > -1) {
 
 								state.compressedTexImage2D(_gl.TEXTURE_2D, i, glFormat, mipmap.width, mipmap.height, 0, mipmap.data);
-							} else {}
+							} else {
+
+								console.warn("THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .uploadTexture()");
+							}
 						} else {
 
 							state.texImage2D(_gl.TEXTURE_2D, i, glFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
@@ -16078,10 +16216,14 @@
 					var image = texture.image;
 
 					if (image === undefined) {
+
+						console.warn('THREE.WebGLRenderer: Texture marked for update but image is undefined', texture);
 						return;
 					}
 
 					if (image.complete === false) {
+
+						console.warn('THREE.WebGLRenderer: Texture marked for update but image is incomplete', texture);
 						return;
 					}
 
@@ -16109,6 +16251,8 @@
 
 					var context = canvas.getContext('2d');
 					context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+
+					console.warn('THREE.WebGLRenderer: image is too big (' + image.width + 'x' + image.height + '). Resized to ' + canvas.width + 'x' + canvas.height, image);
 
 					return canvas;
 				}
@@ -16139,6 +16283,8 @@
 
 					var context = canvas.getContext('2d');
 					context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+					console.warn('THREE.WebGLRenderer: image is not power of two (' + image.width + 'x' + image.height + '). Resized to ' + canvas.width + 'x' + canvas.height, image);
 
 					return canvas;
 				}
@@ -16216,7 +16362,10 @@
 										if (state.getCompressedTextureFormats().indexOf(glFormat) > -1) {
 
 											state.compressedTexImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, mipmap.data);
-										} else {}
+										} else {
+
+											console.warn("THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .setCubeTexture()");
+										}
 									} else {
 
 										state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
@@ -16435,6 +16584,8 @@
 			this.readRenderTargetPixels = function (renderTarget, x, y, width, height, buffer) {
 
 				if (renderTarget instanceof THREE.WebGLRenderTarget === false) {
+
+					console.error('THREE.WebGLRenderer.readRenderTargetPixels: renderTarget is not THREE.WebGLRenderTarget.');
 					return;
 				}
 
@@ -16456,17 +16607,24 @@
 						var texture = renderTarget.texture;
 
 						if (texture.format !== THREE.RGBAFormat && paramThreeToGL(texture.format) !== _gl.getParameter(_gl.IMPLEMENTATION_COLOR_READ_FORMAT)) {
+
+							console.error('THREE.WebGLRenderer.readRenderTargetPixels: renderTarget is not in RGBA or implementation defined format.');
 							return;
 						}
 
 						if (texture.type !== THREE.UnsignedByteType && paramThreeToGL(texture.type) !== _gl.getParameter(_gl.IMPLEMENTATION_COLOR_READ_TYPE) && !(texture.type === THREE.FloatType && extensions.get('WEBGL_color_buffer_float')) && !(texture.type === THREE.HalfFloatType && extensions.get('EXT_color_buffer_half_float'))) {
+
+							console.error('THREE.WebGLRenderer.readRenderTargetPixels: renderTarget is not in UnsignedByteType or implementation defined type.');
 							return;
 						}
 
 						if (_gl.checkFramebufferStatus(_gl.FRAMEBUFFER) === _gl.FRAMEBUFFER_COMPLETE) {
 
 							_gl.readPixels(x, y, width, height, paramThreeToGL(texture.format), paramThreeToGL(texture.type), buffer);
-						} else {}
+						} else {
+
+							console.error('THREE.WebGLRenderer.readRenderTargetPixels: readPixels from renderTarget failed. Framebuffer not complete.');
+						}
 					} finally {
 
 						if (restore) {
@@ -16640,7 +16798,10 @@
 
 				}
 
-				if (extension === null) {}
+				if (extension === null) {
+
+					console.warn('THREE.WebGLRenderer: ' + name + ' extension not supported.');
+				}
 
 				extensions[name] = extension;
 
@@ -16696,6 +16857,8 @@
 			var _maxPrecision = getMaxPrecision(this.precision);
 
 			if (_maxPrecision !== this.precision) {
+
+				console.warn('THREE.WebGLRenderer:', this.precision, 'not supported, using', _maxPrecision, 'instead.');
 				this.precision = _maxPrecision;
 			}
 
@@ -17342,7 +17505,10 @@
 				try {
 
 					gl.compressedTexImage2D.apply(gl, arguments);
-				} catch (error) {}
+				} catch (error) {
+
+					console.error(error);
+				}
 			};
 
 			this.texImage2D = function () {
@@ -17350,7 +17516,10 @@
 				try {
 
 					gl.texImage2D.apply(gl, arguments);
-				} catch (error) {}
+				} catch (error) {
+
+					console.error(error);
+				}
 			};
 
 			// clear values
@@ -17590,6 +17759,8 @@
 				var extension = extensions.get('ANGLE_instanced_arrays');
 
 				if (extension === null) {
+
+					console.error('THREE.WebGLBufferRenderer: using THREE.InstancedBufferGeometry but hardware does not support extension ANGLE_instanced_arrays.');
 					return;
 				}
 
@@ -17663,6 +17834,8 @@
 				var extension = extensions.get('ANGLE_instanced_arrays');
 
 				if (extension === null) {
+
+					console.error('THREE.WebGLBufferRenderer: using THREE.InstancedBufferGeometry but hardware does not support extension ANGLE_instanced_arrays.');
 					return;
 				}
 
@@ -17702,9 +17875,15 @@
 				gl.shaderSource(shader, string);
 				gl.compileShader(shader);
 
-				if (gl.getShaderParameter(shader, gl.COMPILE_STATUS) === false) {}
+				if (gl.getShaderParameter(shader, gl.COMPILE_STATUS) === false) {
 
-				if (gl.getShaderInfoLog(shader) !== '') {}
+					console.error('THREE.WebGLShader: Shader couldn\'t compile.');
+				}
+
+				if (gl.getShaderInfoLog(shader) !== '') {
+
+					console.warn('THREE.WebGLShader: gl.getShaderInfoLog()', type === gl.VERTEX_SHADER ? 'vertex' : 'fragment', gl.getShaderInfoLog(shader), addLineNumbers(string));
+				}
 
 				// --enable-privileged-webgl-extension
 				// console.log( type, gl.getExtension( 'WEBGL_debug_shaders' ).getTranslatedShaderSource( shader ) );
@@ -18708,7 +18887,10 @@
 					// Not using update ranges
 
 					gl.bufferSubData(bufferType, 0, data.array);
-				} else if (data.updateRange.count === 0) {} else {
+				} else if (data.updateRange.count === 0) {
+
+					console.error('THREE.WebGLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually.');
+				} else {
 
 					gl.bufferSubData(bufferType, data.updateRange.offset * data.array.BYTES_PER_ELEMENT, data.array.subarray(data.updateRange.offset, data.updateRange.offset + data.updateRange.count));
 
@@ -19215,7 +19397,12 @@
 				if (gl.getProgramParameter(program, gl.LINK_STATUS) === false) {
 
 					runnable = false;
-				} else if (programLog !== '') {} else if (vertexLog === '' || fragmentLog === '') {
+
+					console.error('THREE.WebGLProgram: shader error: ', gl.getError(), 'gl.VALIDATE_STATUS', gl.getProgramParameter(program, gl.VALIDATE_STATUS), 'gl.getProgramInfoLog', programLog, vertexLog, fragmentLog);
+				} else if (programLog !== '') {
+
+					console.warn('THREE.WebGLProgram: gl.getProgramInfoLog()', programLog);
+				} else if (vertexLog === '' || fragmentLog === '') {
 
 					haveDiagnostics = false;
 				}
@@ -19293,12 +19480,16 @@
 
 					uniforms: {
 						get: function get() {
+
+							console.warn('THREE.WebGLProgram: .uniforms is now .getUniforms().');
 							return this.getUniforms();
 						}
 					},
 
 					attributes: {
 						get: function get() {
+
+							console.warn('THREE.WebGLProgram: .attributes is now .getAttributes().');
 							return this.getAttributes();
 						}
 					}
@@ -19460,7 +19651,10 @@
 
 						maxBones = Math.min(object.skeleton.bones.length, maxBones);
 
-						if (maxBones < object.skeleton.bones.length) {}
+						if (maxBones < object.skeleton.bones.length) {
+
+							console.warn('WebGLRenderer: too many bones - ' + object.skeleton.bones.length + ', this GPU supports just ' + maxBones + ' (try OpenGL instead of ANGLE)');
+						}
 					}
 
 					return maxBones;
@@ -19505,7 +19699,10 @@
 
 					precision = capabilities.getMaxPrecision(material.precision);
 
-					if (precision !== material.precision) {}
+					if (precision !== material.precision) {
+
+						console.warn('THREE.WebGLProgram.getParameters:', material.precision, 'not supported, using', precision, 'instead.');
+					}
 				}
 
 				var parameters = {
@@ -20244,7 +20441,9 @@
 	    }
 	  }, {
 	    key: 'onError',
-	    value: function onError(err) {}
+	    value: function onError(err) {
+	      console.error('error loading', this.source, err);
+	    }
 	  }, {
 	    key: 'startVideoLoop',
 	    value: function startVideoLoop() {
@@ -20258,6 +20457,7 @@
 	      var videoLoop = function videoLoop() {
 	        _this.needsUpdate = true;
 	        _this.videoLoopId = setTimeout(videoLoop, videoFps);
+	        //console.log('Video Loop');
 	      };
 
 	      videoLoop();
@@ -20280,6 +20480,7 @@
 	        var cameraUpdated = _this2.controls.update();
 	        _this2.renderer.render(_this2.scene, _this2.camera, _this2.needsUpdate || cameraUpdated);
 	        _this2.needsUpdate = false;
+	        //console.log('Render Loop');
 	      };
 
 	      this.startVideoLoop();
@@ -20308,7 +20509,13 @@
 	  createClass(Video, [{
 	    key: 'createTexture',
 	    value: function createTexture() {
-	      var texture = new THREE.VideoTexture(this.element);
+
+	      try {
+	        var texture = new THREE.VideoTexture(this.element);
+	      } catch (e) {
+	        console.log(e);
+	      }
+
 	      //TODO: we can pass all this info through the constructor
 	      texture.minFilter = THREE.LinearFilter;
 	      texture.magFilter = THREE.LinearFilter;
@@ -20519,12 +20726,12 @@
 	}(ThreeSixtyViewer);
 
 	var video = function video(options) {
-	  if (utils.shouldUseAudioDriver()) {
-	    return new Audio(options);
-	  }
-	  if (utils.shouldUseCanvasInBetween()) {
-	    return new Canvas(options);
-	  }
+	  //if (utils.shouldUseAudioDriver()) {
+	  //  return new Audio(options);
+	  //}
+	  //if (utils.shouldUseCanvasInBetween()) {
+	  //  return new Canvas(options);
+	  //}
 	  return new Video(options);
 	};
 

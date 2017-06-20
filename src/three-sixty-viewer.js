@@ -125,7 +125,7 @@ export default class ThreeSixtyViewer {
     let videoLoop = () => {
       this.needsUpdate = true;
       this.videoLoopId = setTimeout(videoLoop, videoFps);
-      console.log('Video Loop');
+      //console.log('Video Loop');
     }
 
     videoLoop();
@@ -146,7 +146,7 @@ export default class ThreeSixtyViewer {
       let cameraUpdated = this.controls.update();
       this.renderer.render(this.scene, this.camera, this.needsUpdate || cameraUpdated);
       this.needsUpdate = false;
-      console.log('Render Loop');
+      //console.log('Render Loop');
     };
 
     this.startVideoLoop();

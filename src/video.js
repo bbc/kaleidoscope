@@ -7,7 +7,13 @@ export default class Video extends ThreeSixtyViewer {
   }
 
   createTexture() {
-    let texture = new THREE.VideoTexture(this.element);
+
+    try {
+        var texture = new THREE.VideoTexture(this.element);
+    } catch(e) {
+      console.log(e);
+    }
+
     //TODO: we can pass all this info through the constructor
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;

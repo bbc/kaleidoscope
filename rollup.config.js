@@ -13,7 +13,7 @@ export default {
       jsnext: true,
       browser: true,
     }),
-    strip({debugger: true, sourceMap: false}),
+    //strip({debugger: true, sourceMap: false}),
     commonjs(),
     babel(),
   ],

@@ -6,6 +6,10 @@
 	    return (/(ipad|iphone|ipod)/ig.test(navigator.userAgent)
 	    );
 	  },
+	  isEdge: function isEdge() {
+	    return (/\sedge\//ig.test(navigator.userAgent)
+	    );
+	  },
 	  shouldUseAudioDriver: function shouldUseAudioDriver() {
 	    var isOldiOSOnIphone = /iphone.*(7|8|9)_[0-9]/i.test(navigator.userAgent);
 	    var isWebView = /(iPhone|iPod).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent);
@@ -20115,7 +20119,7 @@
 	    this.el = this.renderer.el;
 	    this.theta = this.initialYaw * Math.PI / 180;
 	    this.phi = 0;
-	    this.velo = utils.isiOS() ? 0.02 : 1.6;
+	    this.velo = this.getVelocity();
 	    this.rotateStart = new THREE.Vector2();
 	    this.rotateEnd = new THREE.Vector2();
 	    this.rotateDelta = new THREE.Vector2();
@@ -20142,6 +20146,20 @@
 	  }
 
 	  createClass(Controls, [{
+	    key: 'getVelocity',
+	    value: function getVelocity() {
+
+	      if (utils.isiOS()) {
+	        return 0.02;
+	      }
+
+	      if (utils.isEdge()) {
+	        return 0.02;
+	      }
+
+	      return 1.6;
+	    }
+	  }, {
 	    key: 'bindEvents',
 	    value: function bindEvents() {
 	      //this.el.addEventListener('mouseleave', this.onMouseUp);
@@ -20231,25 +20249,58 @@
 	  }, {
 	    key: 'onDeviceMotion',
 	    value: function onDeviceMotion(event) {
-	      var portrait = event.portrait !== undefined ? event.portrait : window.matchMedia("(orientation: portrait)").matches;
 	      var orientation = void 0;
+
+	      var screenOrientation = screen.orientation || screen.msOrientation || screen.mozOrientation;
+
 	      if (event.orientation !== undefined) {
 	        orientation = event.orientation;
 	      } else if (window.orientation !== undefined) {
 	        orientation = window.orientation;
-	      } else {
-	        orientation = -90;
-	      }
-	      var alpha = THREE.Math.degToRad(event.rotationRate.alpha);
-	      var beta = THREE.Math.degToRad(event.rotationRate.beta);
-	      if (portrait) {
-	        this.phi = this.verticalPanning ? this.phi + alpha * this.velo : this.phi;
-	        this.theta = this.theta - beta * this.velo * -1;
-	      } else {
-	        if (this.verticalPanning) {
-	          this.phi = orientation === -90 ? this.phi + beta * this.velo : this.phi - beta * this.velo;
+	      } else if (screenOrientation) {
+
+	        var type = screenOrientation.type || screenOrientation;
+
+	        switch (type) {
+	          case 'portrait-primary':
+	            orientation = -90;
+	            break;
+	          case 'portrait-secondary':
+	            orientation = 90;
+	            break;
+	          case 'landscape-primary':
+	            orientation = 0;
+	            break;
+	          case 'landscape-secondary':
+	            orientation = 180;
+	            break;
+	          default:
+	            orientation = 0;
 	        }
-	        this.theta = orientation === -90 ? this.theta - alpha * this.velo : this.theta + alpha * this.velo;
+	      } else {
+	        orientation = 0;
+	      }
+
+	      var beta = utils.isEdge() ? THREE.Math.degToRad(event.rotationRate.beta) : THREE.Math.degToRad(event.rotationRate.alpha);
+	      var gamma = utils.isEdge() ? THREE.Math.degToRad(event.rotationRate.gamma) : THREE.Math.degToRad(event.rotationRate.beta);
+
+	      switch (orientation) {
+	        case 0:
+	          this.phi = this.verticalPanning ? this.phi + beta * this.velo : this.phi;
+	          this.theta = this.theta + gamma * this.velo;
+	          break;
+	        case 180:
+	          this.phi = this.verticalPanning ? this.phi - beta * this.velo : this.phi;
+	          this.theta = this.theta - gamma * this.velo;
+	          break;
+	        case 90:
+	          this.phi = this.verticalPanning ? this.phi - gamma * this.velo : this.phi;
+	          this.theta = this.theta + beta * this.velo;
+	          break;
+	        case -90:
+	          this.phi = this.verticalPanning ? this.phi + gamma * this.velo : this.phi;
+	          this.theta = this.theta - beta * this.velo;
+	          break;
 	      }
 
 	      this.adjustPhi();

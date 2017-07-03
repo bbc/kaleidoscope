@@ -120,25 +120,59 @@ export default class Controls {
   }
 
   onDeviceMotion(event) {
-    let portrait = event.portrait !== undefined  ? event.portrait : window.matchMedia("(orientation: portrait)").matches;
     let orientation;
+
+    let screenOrientation = screen.orientation || screen.msOrientation || screen.mozOrientation;
+
     if (event.orientation !== undefined) {
       orientation = event.orientation;
     } else if (window.orientation !== undefined) {
       orientation = window.orientation;
+    } else if (screenOrientation) {
+
+        let type = screenOrientation.type || screenOrientation;
+
+        switch (type) {
+            case 'portrait-primary':
+                orientation = -90;
+                break;
+            case 'portrait-secondary':
+                orientation = 90;
+                break;
+            case 'landscape-primary':
+                orientation = 0;
+                break;
+            case 'landscape-secondary':
+                orientation = 180;
+                break;
+            default:
+                orientation = 0;
+        }
+
     } else {
-      orientation = -90;
+        orientation = 0;
     }
-    let alpha = utils.isEdge() ? THREE.Math.degToRad(event.rotationRate.gamma) : THREE.Math.degToRad(event.rotationRate.alpha);
-    let beta = THREE.Math.degToRad(event.rotationRate.beta);
-    if (portrait) {
-      this.phi = this.verticalPanning ? this.phi + alpha * this.velo : this.phi;
-      this.theta = this.theta - beta * this.velo * -1;
-    } else {
-      if (this.verticalPanning) {
-        this.phi = orientation === -90 ? this.phi + beta * this.velo : this.phi - beta * this.velo;
-      }
-      this.theta = orientation === -90 ? this.theta - alpha * this.velo : this.theta + alpha * this.velo;
+
+    let beta = utils.isEdge() ? THREE.Math.degToRad(event.rotationRate.beta) : THREE.Math.degToRad(event.rotationRate.alpha);
+    let gamma = utils.isEdge() ? THREE.Math.degToRad(event.rotationRate.gamma) : THREE.Math.degToRad(event.rotationRate.beta);
+
+    switch (orientation) {
+        case 0:
+            this.phi = this.verticalPanning ? this.phi + beta * this.velo : this.phi;
+            this.theta = this.theta + gamma * this.velo;
+            break;
+        case 180:
+            this.phi = this.verticalPanning ? this.phi - beta * this.velo : this.phi;
+            this.theta = this.theta - gamma * this.velo;
+            break;
+        case 90:
+            this.phi = this.verticalPanning ? this.phi - gamma * this.velo : this.phi;
+            this.theta = this.theta + beta * this.velo;
+            break;
+        case -90:
+            this.phi = this.verticalPanning ? this.phi + gamma * this.velo : this.phi;
+            this.theta = this.theta - beta * this.velo;
+            break;
     }
 
     this.adjustPhi();

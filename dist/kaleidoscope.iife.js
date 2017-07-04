@@ -20428,13 +20428,6 @@
 	      this.controls.centralize();
 	    }
 	  }, {
-	    key: 'stopVideoLoop',
-	    value: function stopVideoLoop() {
-	      clearTimeout(this.videoLoopId);
-	      this.videoLoopId = null;
-	      this.needsUpdate = false;
-	    }
-	  }, {
 	    key: 'destroy',
 	    value: function destroy() {
 	      this.element.style.display = '';
@@ -20512,6 +20505,13 @@
 	      };
 
 	      videoLoop();
+	    }
+	  }, {
+	    key: 'stopVideoLoop',
+	    value: function stopVideoLoop() {
+	      clearTimeout(this.videoLoopId);
+	      this.videoLoopId = null;
+	      this.needsUpdate = false;
 	    }
 	  }, {
 	    key: 'render',

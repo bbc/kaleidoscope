@@ -57,12 +57,6 @@ export default class ThreeSixtyViewer {
     this.controls.centralize();
   }
 
-  stopVideoLoop() {
-    clearTimeout(this.videoLoopId);
-    this.videoLoopId = null;
-    this.needsUpdate = false;
-  }
-
   destroy() {
     this.element.style.display = '';
     clearTimeout(this.videoLoopId);
@@ -129,6 +123,12 @@ export default class ThreeSixtyViewer {
     }
 
     videoLoop();
+  }
+
+  stopVideoLoop() {
+      clearTimeout(this.videoLoopId);
+      this.videoLoopId = null;
+      this.needsUpdate = false;
   }
 
   render() {

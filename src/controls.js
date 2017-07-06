@@ -25,8 +25,8 @@ export default class Controls {
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
     this.onTouchStart = e => this.onMouseDown({clientX: e.touches[0].pageX, clientY: e.touches[0].pageY});
-    this.onTouchMove = e => this.onMouseMove({clientX: e.touches[0].pageX, clientY: e.touches[0].pageY});
-    this.onTouchEnd = _ => this.onMouseUp();
+    this.onTouchMove = this.onTouchMove.bind(this); //e => this.onMouseMove({clientX: e.touches[0].pageX, clientY: e.touches[0].pageY, preventDefault: e.preventDefault});
+    this.onTouchEnd = e => this.onMouseUp(e);
     this.onDeviceMotion = this.onDeviceMotion.bind(this);
     this.onMessage = this.onMessage.bind(this);
     //this.bindEvents();
@@ -179,17 +179,33 @@ export default class Controls {
   }
 
   onMouseMove(event) {
-    if (!this.isUserInteracting) {
-      return;
-    }
-    this.rotateEnd.set(event.clientX, event.clientY);
 
-    this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
-    this.rotateStart.copy(this.rotateEnd);
+    this.calculateDragMove(event.clientX, event.clientY);
 
-    this.phi = this.verticalPanning ? this.phi + 2 * Math.PI * this.rotateDelta.y / this.renderer.height * 0.3 : this.phi;
-    this.theta += 2 * Math.PI * this.rotateDelta.x / this.renderer.width * 0.5;
-    this.adjustPhi();
+  }
+
+  onTouchMove(event) {
+
+
+      this.calculateDragMove(event.touches[0].pageX, event.touches[0].pageY);
+      event.preventDefault();
+
+  }
+
+  calculateDragMove(x,y) {
+
+      if(!this.isUserInteracting) {
+          return;
+      }
+      this.rotateEnd.set(x, y);
+
+      this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
+      this.rotateStart.copy(this.rotateEnd);
+
+      this.phi = this.verticalPanning ? this.phi + 2 * Math.PI * this.rotateDelta.y / this.renderer.height * 0.3 : this.phi;
+      this.theta += 2 * Math.PI * this.rotateDelta.x / this.renderer.width * 0.5;
+      this.adjustPhi();
+
   }
 
   adjustPhi() {

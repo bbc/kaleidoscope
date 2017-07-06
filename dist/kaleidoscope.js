@@ -20137,11 +20137,9 @@
 	    this.onTouchStart = function (e) {
 	      return _this.onMouseDown({ clientX: e.touches[0].pageX, clientY: e.touches[0].pageY });
 	    };
-	    this.onTouchMove = function (e) {
-	      return _this.onMouseMove({ clientX: e.touches[0].pageX, clientY: e.touches[0].pageY });
-	    };
-	    this.onTouchEnd = function (_) {
-	      return _this.onMouseUp();
+	    this.onTouchMove = this.onTouchMove.bind(this); //e => this.onMouseMove({clientX: e.touches[0].pageX, clientY: e.touches[0].pageY, preventDefault: e.preventDefault});
+	    this.onTouchEnd = function (e) {
+	      return _this.onMouseUp(e);
 	    };
 	    this.onDeviceMotion = this.onDeviceMotion.bind(this);
 	    this.onMessage = this.onMessage.bind(this);
@@ -20311,10 +20309,24 @@
 	  }, {
 	    key: 'onMouseMove',
 	    value: function onMouseMove(event) {
+
+	      this.calculateDragMove(event.clientX, event.clientY);
+	    }
+	  }, {
+	    key: 'onTouchMove',
+	    value: function onTouchMove(event) {
+
+	      this.calculateDragMove(event.touches[0].pageX, event.touches[0].pageY);
+	      event.preventDefault();
+	    }
+	  }, {
+	    key: 'calculateDragMove',
+	    value: function calculateDragMove(x, y) {
+
 	      if (!this.isUserInteracting) {
 	        return;
 	      }
-	      this.rotateEnd.set(event.clientX, event.clientY);
+	      this.rotateEnd.set(x, y);
 
 	      this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
 	      this.rotateStart.copy(this.rotateEnd);

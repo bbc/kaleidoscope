@@ -13,6 +13,9 @@
 	    return (/\sedge\//ig.test(navigator.userAgent)
 	    );
 	  },
+	  isWindows: function isWindows() {
+	    return navigator.platform.indexOf('Win') > -1;
+	  },
 	  shouldUseAudioDriver: function shouldUseAudioDriver() {
 	    var isOldiOSOnIphone = /iphone.*(7|8|9)_[0-9]/i.test(navigator.userAgent);
 	    var isWebView = /(iPhone|iPod).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent);
@@ -20154,7 +20157,7 @@
 	        return 0.02;
 	      }
 
-	      if (utils.isEdge()) {
+	      if (utils.isWindows()) {
 	        return 0.02;
 	      }
 
@@ -20264,10 +20267,10 @@
 
 	        switch (type) {
 	          case 'portrait-primary':
-	            orientation = -90;
+	            orientation = utils.isEdge() ? -90 : 90;
 	            break;
 	          case 'portrait-secondary':
-	            orientation = 90;
+	            orientation = utils.isEdge() ? 90 : -90;
 	            break;
 	          case 'landscape-primary':
 	            orientation = 0;

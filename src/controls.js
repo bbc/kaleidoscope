@@ -38,7 +38,7 @@ export default class Controls {
       return 0.02;
     }
 
-    if(utils.isEdge()) {
+    if(utils.isWindows()) {
       return 0.02;
     }
 
@@ -134,10 +134,10 @@ export default class Controls {
 
         switch (type) {
             case 'portrait-primary':
-                orientation = -90;
+                orientation = utils.isEdge() ? -90 : 90;
                 break;
             case 'portrait-secondary':
-                orientation = 90;
+                orientation = utils.isEdge() ? 90: -90;
                 break;
             case 'landscape-primary':
                 orientation = 0;

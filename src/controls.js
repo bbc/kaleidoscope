@@ -34,11 +34,7 @@ export default class Controls {
 
   getVelocity() {
 
-    if(utils.isiOS()) {
-      return 0.02;
-    }
-
-    if(utils.isWindows()) {
+    if(utils.isiOS || utils.isWindows || utils.isAndroidFirefox) {
       return 0.02;
     }
 
@@ -134,10 +130,10 @@ export default class Controls {
 
         switch (type) {
             case 'portrait-primary':
-                orientation = utils.isEdge() ? -90 : 90;
+                orientation = utils.isEdge ? -90 : 90;
                 break;
             case 'portrait-secondary':
-                orientation = utils.isEdge() ? 90: -90;
+                orientation = utils.isEdge ? 90: -90;
                 break;
             case 'landscape-primary':
                 orientation = 0;
@@ -153,8 +149,8 @@ export default class Controls {
         orientation = 0;
     }
 
-    let beta = utils.isEdge() ? THREE.Math.degToRad(event.rotationRate.beta) : THREE.Math.degToRad(event.rotationRate.alpha);
-    let gamma = utils.isEdge() ? THREE.Math.degToRad(event.rotationRate.gamma) : THREE.Math.degToRad(event.rotationRate.beta);
+    let beta = utils.isEdge ? THREE.Math.degToRad(event.rotationRate.beta) : THREE.Math.degToRad(event.rotationRate.alpha);
+    let gamma = utils.isEdge ? THREE.Math.degToRad(event.rotationRate.gamma) : THREE.Math.degToRad(event.rotationRate.beta);
 
     switch (orientation) {
         case 0:

@@ -1,24 +1,20 @@
+var isOldiOSOnIphone = /iphone.*(7|8|9)_[0-9]/i.test(navigator.userAgent);
+var isWebView = /(iPhone|iPod).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent);
+
+var isiOS = /(ipad|iphone|ipod)/ig.test(navigator.userAgent);
+var isEdge = /\sedge\//ig.test(navigator.userAgent);
+var isWindows = navigator.platform.indexOf('Win') > -1;
+var isAndroidFirefox = /firefox/i.test(navigator.userAgent) && /android/i.test(navigator.userAgent) && !isEdge;
+var shouldUseAudioDriver = isOldiOSOnIphone || isWebView;
+var shouldUseCanvasInBetween = /trident|edge/i.test(navigator.userAgent);
+
 var utils = {
-  isiOS: function isiOS() {
-    return (/(ipad|iphone|ipod)/ig.test(navigator.userAgent)
-    );
-  },
-  isEdge: function isEdge() {
-    return (/\sedge\//ig.test(navigator.userAgent)
-    );
-  },
-  isWindows: function isWindows() {
-    return navigator.platform.indexOf('Win') > -1;
-  },
-  shouldUseAudioDriver: function shouldUseAudioDriver() {
-    var isOldiOSOnIphone = /iphone.*(7|8|9)_[0-9]/i.test(navigator.userAgent);
-    var isWebView = /(iPhone|iPod).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent);
-    return isOldiOSOnIphone || isWebView;
-  },
-  shouldUseCanvasInBetween: function shouldUseCanvasInBetween() {
-    return (/trident|edge/i.test(navigator.userAgent)
-    );
-  }
+    isiOS: isiOS,
+    isEdge: isEdge,
+    isWindows: isWindows,
+    isAndroidFirefox: isAndroidFirefox,
+    shouldUseAudioDriver: shouldUseAudioDriver,
+    shouldUseCanvasInBetween: shouldUseCanvasInBetween
 };
 
 function interopDefault(ex) {
@@ -20147,11 +20143,7 @@ var Controls = function () {
     key: 'getVelocity',
     value: function getVelocity() {
 
-      if (utils.isiOS()) {
-        return 0.02;
-      }
-
-      if (utils.isWindows()) {
+      if (utils.isiOS || utils.isWindows || utils.isAndroidFirefox) {
         return 0.02;
       }
 
@@ -20261,10 +20253,10 @@ var Controls = function () {
 
         switch (type) {
           case 'portrait-primary':
-            orientation = utils.isEdge() ? -90 : 90;
+            orientation = utils.isEdge ? -90 : 90;
             break;
           case 'portrait-secondary':
-            orientation = utils.isEdge() ? 90 : -90;
+            orientation = utils.isEdge ? 90 : -90;
             break;
           case 'landscape-primary':
             orientation = 0;
@@ -20279,8 +20271,8 @@ var Controls = function () {
         orientation = 0;
       }
 
-      var beta = utils.isEdge() ? THREE.Math.degToRad(event.rotationRate.beta) : THREE.Math.degToRad(event.rotationRate.alpha);
-      var gamma = utils.isEdge() ? THREE.Math.degToRad(event.rotationRate.gamma) : THREE.Math.degToRad(event.rotationRate.beta);
+      var beta = utils.isEdge ? THREE.Math.degToRad(event.rotationRate.beta) : THREE.Math.degToRad(event.rotationRate.alpha);
+      var gamma = utils.isEdge ? THREE.Math.degToRad(event.rotationRate.gamma) : THREE.Math.degToRad(event.rotationRate.beta);
 
       switch (orientation) {
         case 0:
@@ -20789,10 +20781,10 @@ var Audio = function (_ThreeSixtyViewer) {
 }(ThreeSixtyViewer);
 
 var video = function video(options) {
-  //if (utils.shouldUseAudioDriver()) {
+  //if (utils.shouldUseAudioDriver) {
   //  return new Audio(options);
   //}
-  //if (utils.shouldUseCanvasInBetween()) {
+  //if (utils.shouldUseCanvasInBetween) {
   //  return new Canvas(options);
   //}
   return new Video(options);

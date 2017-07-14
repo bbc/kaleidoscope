@@ -21,12 +21,15 @@ export default class Controls {
     this.momentum = false;
     this.isUserInteracting = false;
     this.addDraggableStyle();
-    this.onMouseMove = this.onMouseMove.bind(this);
+
     this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
+
     this.onTouchStart = e => this.onMouseDown({clientX: e.touches[0].pageX, clientY: e.touches[0].pageY});
-    this.onTouchMove = this.onTouchMove.bind(this); //e => this.onMouseMove({clientX: e.touches[0].pageX, clientY: e.touches[0].pageY, preventDefault: e.preventDefault});
+    this.onTouchMove = this.onTouchMove.bind(this);
     this.onTouchEnd = e => this.onMouseUp(e);
+
     this.onDeviceMotion = this.onDeviceMotion.bind(this);
     this.onMessage = this.onMessage.bind(this);
     //this.bindEvents();
@@ -43,16 +46,23 @@ export default class Controls {
   }
 
   bindEvents() {
-    //this.el.addEventListener('mouseleave', this.onMouseUp);
-    document.addEventListener('mousemove', this.onMouseMove);
-    this.el.addEventListener('mousedown', this.onMouseDown);
-    document.addEventListener('mouseup', this.onMouseUp);
-    this.el.addEventListener('touchstart', this.onTouchStart);
-    document.addEventListener('touchmove', this.onTouchMove);
-    document.addEventListener('touchend', this.onTouchEnd);
-    //if (!this.isInIframe())
-    //  window.addEventListener('devicemotion', this.onDeviceMotion);
-    //window.addEventListener('message', this.onMessage);
+
+      if(window.PointerEvent) {
+
+          this.el.addEventListener('pointerdown', this.onMouseDown);
+          this.el.addEventListener('pointermove', this.onMouseMove);
+          this.el.addEventListener('pointerup', this.onMouseUp);
+
+      } else {
+
+          this.el.addEventListener('mousedown', this.onMouseDown);
+          document.addEventListener('mousemove', this.onMouseMove);
+          document.addEventListener('mouseup', this.onMouseUp);
+          this.el.addEventListener('touchstart', this.onTouchStart);
+          document.addEventListener('touchmove', this.onTouchMove);
+          document.addEventListener('touchend', this.onTouchEnd);
+
+      }
   }
 
   centralize() {
@@ -86,15 +96,24 @@ export default class Controls {
   }
 
   destroy() {
-    //this.el.removeEventListener('mouseleave', this.onMouseUp);
-    document.removeEventListener('mousemove', this.onMouseMove);
-    this.el.removeEventListener('mousedown', this.onMouseDown);
-    document.removeEventListener('mouseup', this.onMouseUp);
-    this.el.removeEventListener('touchstart', this.onTouchStart);
-    document.removeEventListener('touchmove', this.onTouchMove);
-    document.removeEventListener('touchend', this.onTouchEnd);
-    //window.removeEventListener('devicemotion', this.onDeviceMotion);
-    //window.removeEventListener('message', this.onMessage);
+
+      if(window.PointerEvent) {
+
+          this.el.removeEventListener('pointerdown', this.onMouseDown);
+          this.el.removeEventListener('pointermove', this.onMouseMove);
+          this.el.removeEventListener('pointerup', this.onMouseUp);
+
+      } else {
+
+          this.el.removeEventListener('mousedown', this.onMouseDown);
+          document.removeEventListener('mousemove', this.onMouseMove);
+          document.removeEventListener('mouseup', this.onMouseUp);
+          this.el.removeEventListener('touchstart', this.onTouchStart);
+          document.removeEventListener('touchmove', this.onTouchMove);
+          document.removeEventListener('touchend', this.onTouchEnd);
+
+      }
+
   }
 
   getCurrentStyle() {
@@ -174,6 +193,19 @@ export default class Controls {
     this.adjustPhi();
   }
 
+    onMouseDown(event) {
+
+        if(event.type == 'pointerdown') {
+            this.el.setPointerCapture(event.pointerId);
+        }
+
+        this.addDraggingStyle();
+        this.rotateStart.set(event.clientX, event.clientY);
+        this.isUserInteracting = true;
+        this.momentum = false;
+        this.onDragStart && this.onDragStart();
+    }
+
   onMouseMove(event) {
 
     this.calculateDragMove(event.clientX, event.clientY);
@@ -187,6 +219,13 @@ export default class Controls {
       event.preventDefault();
 
   }
+
+    onMouseUp() {
+        this.isUserInteracting && this.onDragStop && this.onDragStop();
+        this.addDraggableStyle();
+        this.isUserInteracting = false;
+        this.momentum = true;
+    }
 
   calculateDragMove(x,y) {
 
@@ -209,13 +248,7 @@ export default class Controls {
     this.phi = THREE.Math.clamp(this.phi, -Math.PI / 1.95, Math.PI / 1.95);
   }
 
-  onMouseDown(event) {
-    this.addDraggingStyle();
-    this.rotateStart.set(event.clientX, event.clientY);
-    this.isUserInteracting = true;
-    this.momentum = false;
-    this.onDragStart && this.onDragStart();
-  }
+
 
   inertia() {
     if (!this.momentum) return;
@@ -226,12 +259,7 @@ export default class Controls {
     this.adjustPhi();
   }
 
-  onMouseUp() {
-    this.isUserInteracting && this.onDragStop && this.onDragStop();
-    this.addDraggableStyle();
-    this.isUserInteracting = false;
-    this.momentum = true;
-  }
+
 
   update() {
     if ((this.phi === this.previousPhi) && (this.theta === this.previousTheta))

@@ -16,6 +16,7 @@ export default class Controls {
     this.rotateStart = new THREE.Vector2();
     this.rotateEnd = new THREE.Vector2();
     this.rotateDelta = new THREE.Vector2();
+    this.inertiaVector = new THREE.Vector2();
     this.orientation = new THREE.Quaternion();
     this.euler = new THREE.Euler();
     this.momentum = false;
@@ -49,18 +50,18 @@ export default class Controls {
 
       if(window.PointerEvent) {
 
-          this.el.addEventListener('pointerdown', this.onMouseDown);
-          this.el.addEventListener('pointermove', this.onMouseMove);
-          this.el.addEventListener('pointerup', this.onMouseUp);
+          this.el.addEventListener('pointerdown', this.onMouseDown, true);
+          this.el.addEventListener('pointermove', this.onMouseMove, true);
+          this.el.addEventListener('pointerup', this.onMouseUp, true);
 
       } else {
 
-          this.el.addEventListener('mousedown', this.onMouseDown);
-          document.addEventListener('mousemove', this.onMouseMove);
-          document.addEventListener('mouseup', this.onMouseUp);
-          this.el.addEventListener('touchstart', this.onTouchStart);
-          document.addEventListener('touchmove', this.onTouchMove);
-          document.addEventListener('touchend', this.onTouchEnd);
+          this.el.addEventListener('mousedown', this.onMouseDown, true);
+          document.addEventListener('mousemove', this.onMouseMove, true);
+          document.addEventListener('mouseup', this.onMouseUp, true);
+          this.el.addEventListener('touchstart', this.onTouchStart, true);
+          document.addEventListener('touchmove', this.onTouchMove, true);
+          document.addEventListener('touchend', this.onTouchEnd, true);
 
       }
   }
@@ -99,18 +100,18 @@ export default class Controls {
 
       if(window.PointerEvent) {
 
-          this.el.removeEventListener('pointerdown', this.onMouseDown);
-          this.el.removeEventListener('pointermove', this.onMouseMove);
-          this.el.removeEventListener('pointerup', this.onMouseUp);
+          this.el.removeEventListener('pointerdown', this.onMouseDown, true);
+          this.el.removeEventListener('pointermove', this.onMouseMove, true);
+          this.el.removeEventListener('pointerup', this.onMouseUp, true);
 
       } else {
 
-          this.el.removeEventListener('mousedown', this.onMouseDown);
-          document.removeEventListener('mousemove', this.onMouseMove);
-          document.removeEventListener('mouseup', this.onMouseUp);
-          this.el.removeEventListener('touchstart', this.onTouchStart);
-          document.removeEventListener('touchmove', this.onTouchMove);
-          document.removeEventListener('touchend', this.onTouchEnd);
+          this.el.removeEventListener('mousedown', this.onMouseDown, true);
+          document.removeEventListener('mousemove', this.onMouseMove, true);
+          document.removeEventListener('mouseup', this.onMouseUp, true);
+          this.el.removeEventListener('touchstart', this.onTouchStart, true);
+          document.removeEventListener('touchmove', this.onTouchMove, true);
+          document.removeEventListener('touchend', this.onTouchEnd, true);
 
       }
 
@@ -235,11 +236,88 @@ export default class Controls {
       this.rotateEnd.set(x, y);
 
       this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
+      this.inertiaVector.copy(this.rotateDelta).multiplyScalar(0.005);
       this.rotateStart.copy(this.rotateEnd);
 
       this.phi = this.verticalPanning ? this.phi + 2 * Math.PI * this.rotateDelta.y / this.renderer.height * 0.3 : this.phi;
       this.theta += 2 * Math.PI * this.rotateDelta.x / this.renderer.width * 0.5;
       this.adjustPhi();
+
+  }
+
+  startKeyMove(direction) {
+
+      this.momentum = false;
+
+      switch (direction) {
+          case 'up':
+              this.startKeyMoveVertical(direction);
+              break;
+          case 'down':
+              this.startKeyMoveVertical(direction);
+              break;
+          case 'right':
+              this.startKeyMoveHorizontal(direction);
+              break;
+          case 'left':
+              this.startKeyMoveHorizontal(direction);
+              break;
+      }
+
+  }
+
+    stopKeyMove(direction) {
+
+        if(direction == 'up' || direction == 'down') {
+
+            cancelAnimationFrame(this.keyMoveVerticalId);
+            this.keyMoveVerticalId = null;
+            this.momentum = true;
+
+        } else if (direction == 'right' || direction == 'left') {
+
+            cancelAnimationFrame(this.keyMoveHorizontalId);
+            this.keyMoveHorizontalId = null;
+            this.momentum = true;
+
+        }
+
+    }
+
+  startKeyMoveVertical(direction) {
+
+      let animate = () => {
+
+          let factor = (direction == 'up') ? 0.019 : -0.019;
+
+          this.inertiaVector.set(0, factor);
+
+          this.phi = this.verticalPanning ? this.phi + factor : this.phi;
+          this.adjustPhi();
+          this.keyMoveVerticalId = requestAnimationFrame(animate);
+      };
+
+      if(!this.keyMoveVerticalId) {
+          this.keyMoveVerticalId = requestAnimationFrame(animate);
+      }
+
+  }
+
+  startKeyMoveHorizontal(direction) {
+
+      let animate = () => {
+
+          let factor = (direction == 'left') ? 0.019 : -0.019;
+
+          this.inertiaVector.set(factor, 0);
+
+          this.theta += factor;
+          this.keyMoveHorizontalId = requestAnimationFrame(animate);
+      };
+
+      if(!this.keyMoveHorizontalId) {
+          this.keyMoveHorizontalId = requestAnimationFrame(animate);
+      }
 
   }
 
@@ -252,11 +330,16 @@ export default class Controls {
 
   inertia() {
     if (!this.momentum) return;
-    this.rotateDelta.y *= 0.85;
-    this.rotateDelta.x *= 0.85;
-    this.theta += 0.005 * this.rotateDelta.x;
-    this.phi = this.verticalPanning ? this.phi + 0.005 * this.rotateDelta.y : this.phi;
+      this.inertiaVector.y *= 0.85;
+      this.inertiaVector.x *= 0.85;
+    this.theta += this.inertiaVector.x;
+    this.phi = this.verticalPanning ? this.phi + this.inertiaVector.y : this.phi;
     this.adjustPhi();
+
+    if(Math.abs(this.inertiaVector.x) < 0.00001 && Math.abs(this.inertiaVector.y) < 0.00001 ) {
+        this.momentum = false;
+    }
+
   }
 
 

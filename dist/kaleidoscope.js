@@ -20186,7 +20186,7 @@
                 var endTheta = this.initialYaw * Math.PI / 180;
 
                 var duration = 750;
-                var startTheta = this.theta;
+                var startTheta = this.normalizeTheta(this.theta);
                 var startPhi = this.phi;
                 var start = Date.now();
 
@@ -20202,6 +20202,20 @@
                     return requestAnimationFrame(animate);
                 };
                 var id = animate();
+            }
+        }, {
+            key: 'normalizeTheta',
+            value: function normalizeTheta(theta) {
+
+                var theta = theta % (2 * Math.PI);
+
+                if (theta > Math.PI) {
+                    theta = theta - 2 * Math.PI;
+                } else if (theta < -Math.PI) {
+                    theta = theta + 2 * Math.PI;
+                }
+
+                return theta;
             }
         }, {
             key: 'reset',

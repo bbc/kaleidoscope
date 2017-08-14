@@ -70,7 +70,7 @@ export default class Controls {
     let endTheta = this.initialYaw * Math.PI / 180;
 
     let duration = 750;
-    let startTheta = this.theta;
+    let startTheta = this.normalizeTheta(this.theta);
     let startPhi = this.phi;
     let start = Date.now();
 
@@ -86,6 +86,20 @@ export default class Controls {
       return requestAnimationFrame(animate);
     };
     let id = animate();
+  }
+
+  normalizeTheta(theta) {
+
+      var theta = theta % (2 * Math.PI);
+
+      if(theta > Math.PI) {
+          theta = theta - (2 * Math.PI);
+      } else if(theta < -Math.PI) {
+          theta = theta + (2 * Math.PI);
+      }
+
+      return theta;
+
   }
 
   reset() {

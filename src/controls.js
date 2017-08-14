@@ -88,6 +88,13 @@ export default class Controls {
     let id = animate();
   }
 
+  reset() {
+
+      this.theta = this.initialYaw * Math.PI / 180;
+      this.phi = 0;
+
+  }
+
   isInIframe() {
     try {
       return window.self !== window.top;

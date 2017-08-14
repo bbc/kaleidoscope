@@ -20198,6 +20198,13 @@ var Controls = function () {
             var id = animate();
         }
     }, {
+        key: 'reset',
+        value: function reset() {
+
+            this.theta = this.initialYaw * Math.PI / 180;
+            this.phi = 0;
+        }
+    }, {
         key: 'isInIframe',
         value: function isInIframe() {
             try {

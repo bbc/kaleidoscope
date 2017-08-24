@@ -20124,6 +20124,7 @@ var Controls = function () {
         this.euler = new THREE.Euler();
         this.momentum = false;
         this.isUserInteracting = false;
+        this.sentStatOnDrag = false;
         this.addDraggableStyle();
 
         this.onMouseDown = this.onMouseDown.bind(this);
@@ -20350,12 +20351,36 @@ var Controls = function () {
         value: function onMouseMove(event) {
 
             this.calculateDragMove(event.clientX, event.clientY);
+            this.reportDragStat(event);
+        }
+    }, {
+        key: 'reportDragStat',
+        value: function reportDragStat(event) {
+
+            if (this.isUserInteracting && !this.sentStatOnDrag) {
+
+                if (event.type == 'pointermove') {
+
+                    if (event.pointerType == 'mouse') {
+                        this.stats.recordMouseOrientation();
+                    } else {
+                        this.stats.recordTouchOrientation();
+                    }
+                } else if (event.type == 'mousemove') {
+                    this.stats.recordMouseOrientation();
+                } else {
+                    this.stats.recordTouchOrientation();
+                }
+
+                this.sentStatOnDrag = true;
+            }
         }
     }, {
         key: 'onTouchMove',
         value: function onTouchMove(event) {
 
             this.calculateDragMove(event.touches[0].pageX, event.touches[0].pageY);
+            this.reportDragStat(event);
             event.preventDefault();
         }
     }, {
@@ -20365,6 +20390,7 @@ var Controls = function () {
             this.addDraggableStyle();
             this.isUserInteracting = false;
             this.momentum = true;
+            this.sentStatOnDrag = false;
         }
     }, {
         key: 'calculateDragMove',
@@ -20517,6 +20543,7 @@ var ThreeSixtyViewer = function () {
     this.controls = new Controls({
       camera: this.camera,
       renderer: this.renderer,
+      stats: this.stats,
       initialYaw: initialYaw,
       verticalPanning: verticalPanning,
       onDragStart: onDragStart,

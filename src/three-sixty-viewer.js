@@ -24,6 +24,7 @@ export default class ThreeSixtyViewer {
     this.controls = new Controls({
         camera: this.camera,
         renderer: this.renderer,
+        stats: this.stats,
         initialYaw,
         verticalPanning,
         onDragStart,

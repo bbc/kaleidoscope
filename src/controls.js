@@ -21,6 +21,7 @@ export default class Controls {
     this.euler = new THREE.Euler();
     this.momentum = false;
     this.isUserInteracting = false;
+    this.sentStatOnDrag = false;
     this.addDraggableStyle();
 
     this.onMouseDown = this.onMouseDown.bind(this);
@@ -231,6 +232,31 @@ export default class Controls {
   onMouseMove(event) {
 
     this.calculateDragMove(event.clientX, event.clientY);
+    this.reportDragStat(event);
+
+
+  }
+
+  reportDragStat(event) {
+
+      if(this.isUserInteracting && !this.sentStatOnDrag) {
+
+          if(event.type == 'pointermove') {
+
+              if(event.pointerType == 'mouse') {
+                  this.stats.recordMouseOrientation();
+              } else {
+                  this.stats.recordTouchOrientation();
+              }
+
+          } else if(event.type == 'mousemove') {
+              this.stats.recordMouseOrientation();
+          } else {
+              this.stats.recordTouchOrientation();
+          }
+
+          this.sentStatOnDrag = true;
+      }
 
   }
 
@@ -238,6 +264,7 @@ export default class Controls {
 
 
       this.calculateDragMove(event.touches[0].pageX, event.touches[0].pageY);
+      this.reportDragStat(event);
       event.preventDefault();
 
   }
@@ -247,6 +274,7 @@ export default class Controls {
         this.addDraggableStyle();
         this.isUserInteracting = false;
         this.momentum = true;
+        this.sentStatOnDrag = false;
     }
 
   calculateDragMove(x,y) {

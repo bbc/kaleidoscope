@@ -39,11 +39,7 @@ export default class Controls {
 
   getVelocity() {
 
-    if(utils.isiOS || utils.isWindows || utils.isAndroidFirefox) {
       return 0.02;
-    }
-
-    return 1.6;
 
   }
 
@@ -191,8 +187,12 @@ export default class Controls {
         orientation = 0;
     }
 
-    let beta = utils.isEdge ? THREE.Math.degToRad(event.rotationRate.beta) : THREE.Math.degToRad(event.rotationRate.alpha);
-    let gamma = utils.isEdge ? THREE.Math.degToRad(event.rotationRate.gamma) : THREE.Math.degToRad(event.rotationRate.beta);
+    let alphaRads = utils.normalizeToRadians(event.rotationRate.alpha);
+    let betaRads = utils.normalizeToRadians(event.rotationRate.beta);
+    let gammaRads = utils.normalizeToRadians(event.rotationRate.gamma);
+
+    let beta = utils.isEdge ? betaRads : alphaRads;
+    let gamma = utils.isEdge ? gammaRads : betaRads;
 
     switch (orientation) {
         case 0:

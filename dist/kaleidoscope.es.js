@@ -5,6 +5,11 @@ var isiOS = /(ipad|iphone|ipod)/ig.test(navigator.userAgent);
 var isEdge = /\sedge\//ig.test(navigator.userAgent);
 var isWindows = navigator.platform.indexOf('Win') > -1;
 var isAndroidFirefox = /firefox/i.test(navigator.userAgent) && /android/i.test(navigator.userAgent) && !isEdge;
+
+var chromeMatches = /\sChrome\/(\d+)\./.exec(navigator.userAgent);
+var isChrome = !!chromeMatches && !isEdge;
+var chromeVersion = isChrome && chromeMatches[1] ? +chromeMatches[1] : null;
+
 var shouldUseAudioDriver = isOldiOSOnIphone || isWebView;
 var shouldUseCanvasInBetween = /trident|edge/i.test(navigator.userAgent);
 
@@ -14,7 +19,18 @@ var utils = {
     isWindows: isWindows,
     isAndroidFirefox: isAndroidFirefox,
     shouldUseAudioDriver: shouldUseAudioDriver,
-    shouldUseCanvasInBetween: shouldUseCanvasInBetween
+    shouldUseCanvasInBetween: shouldUseCanvasInBetween,
+
+    normalizeToRadians: function normalizeToRadians(angle) {
+
+        if (isChrome && chromeVersion < 66) {
+            // Already in radians
+            return angle;
+        }
+
+        // Else convert from degrees
+        return angle / 180 * Math.PI;
+    }
 };
 
 function interopDefault(ex) {
@@ -20148,11 +20164,7 @@ var Controls = function () {
         key: 'getVelocity',
         value: function getVelocity() {
 
-            if (utils.isiOS || utils.isWindows || utils.isAndroidFirefox) {
-                return 0.02;
-            }
-
-            return 1.6;
+            return 0.02;
         }
     }, {
         key: 'bindEvents',
@@ -20308,8 +20320,12 @@ var Controls = function () {
                 orientation = 0;
             }
 
-            var beta = utils.isEdge ? THREE.Math.degToRad(event.rotationRate.beta) : THREE.Math.degToRad(event.rotationRate.alpha);
-            var gamma = utils.isEdge ? THREE.Math.degToRad(event.rotationRate.gamma) : THREE.Math.degToRad(event.rotationRate.beta);
+            var alphaRads = utils.normalizeToRadians(event.rotationRate.alpha);
+            var betaRads = utils.normalizeToRadians(event.rotationRate.beta);
+            var gammaRads = utils.normalizeToRadians(event.rotationRate.gamma);
+
+            var beta = utils.isEdge ? betaRads : alphaRads;
+            var gamma = utils.isEdge ? gammaRads : betaRads;
 
             switch (orientation) {
                 case 0:
